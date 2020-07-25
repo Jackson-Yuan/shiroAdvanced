@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <properties resource="jdbc.properties"/>
+    <classPathEntry location="E:\java\1\repo\mysql\mysql-connector-java\5.1.35\mysql-connector-java-5.1.35.jar"/>
+
+    <context id="MysqlTables" targetRuntime="MyBatis3" defaultModelType="flat">
+
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <jdbcConnection driverClass="${jdbc.driver}"
+                        connectionURL="${jdbc.url}"
+                        userId="${jdbc.userName}"
+                        password="${jdbc.password}">
+        </jdbcConnection>
+
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.yyc.entity" targetProject="F:\java\shiroAdvanced\src\main\java">
+            <property name="enableSubPackages" value="false"/>
+            <property name="exampleTargetProject" value="F:\java\shiroAdvanced\src\main\java"/>
+            <property name="exampleTargetPackage" value="com.yyc.entity.example"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="mapper" targetProject="F:\java\shiroAdvanced\src\main\resources">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.yyc.dao"
+                             targetProject="F:\java\shiroAdvanced\src\main\java">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <table tableName="user" domainObjectName="User" delimitAllColumns="true">
+
+        </table>
+
+    </context>
+</generatorConfiguration>

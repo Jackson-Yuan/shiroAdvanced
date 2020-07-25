@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--自定义realm-->
+    <bean id="webRealm" class="com.yyc.realm.WebRealm">
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <property name="hashAlgorithmName" value="MD5"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!--自定义filter-->
+    <bean id="jsonAuthentication" class="com.yyc.filter.JsonAuthentication"/>
+    <bean id="jsonAuthority" class="com.yyc.filter.JsonAuthority"/>
+
+    <!--自定义cache-->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:cache.xml"/>
+    </bean>
+    <!--核心securityManager-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realms">
+            <list>
+                <ref bean="webRealm"/>
+            </list>
+        </property>
+        <property name="sessionManager">
+            <bean class="com.yyc.manager.CustomWebSessionManager">
+                <property name="deleteInvalidSessions" value="true"/>
+                <property name="globalSessionTimeout" value="600000"/>
+            </bean>
+        </property>
+        <property name="cacheManager" ref="cacheManager"/>
+    </bean>
+
+    <!--一切的起点-->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login.jsp"/>
+        <property name="unauthorizedUrl" value="/unauthorized.html"/>
+        <property name="filters">
+            <map>
+                <entry key="jsonAuthc" value-ref="jsonAuthentication"/>
+                <entry key="jsonRole" value-ref="jsonAuthority"/>
+            </map>
+        </property>
+        <property name="filterChainDefinitions">
+            <value>
+                /login.jsp=anon
+                /login=anon
+                /teacher/*=roles[teacher]
+                /student/*=roles[student]
+                /admin/*=roles[admin]
+                /json/student/*=jsonRole[student]
+                /json/teacher/*=jsonRole[teacher]
+                /json/admin/*=jsonRole[admin]
+                /json/**=jsonAuthc
+                /**=authc
+            </value>
+        </property>
+    </bean>
+</beans>

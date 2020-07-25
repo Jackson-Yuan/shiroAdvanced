@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!-- jsp视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="order" value="2"/>
+    </bean>
+
+    <!--html视图解析器-->
+    <bean id="freeMakerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/"/>
+        <!--因为利用freemaker进行转发到html，以下配置保证转发的页面为中文-->
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="locale">zh_CN</prop>
+                <prop key="defaultEncoding">UTF-8</prop>
+            </props>
+        </property>
+    </bean>
+    <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <!--因为利用freemaker进行转发到html，以下配置保证转发的页面为中文-->
+        <property name="contentType" value="text/html;charset=UTF-8"/>
+        <property name="prefix" value="/"/>
+        <property name="suffix" value=".html"/>
+        <property name="order" value="0"/>
+    </bean>
+
+
+    <!--图片上传解析器-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxUploadSizePerFile" value="10240000"/>
+    </bean>
+</beans>
